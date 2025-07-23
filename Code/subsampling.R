@@ -1,5 +1,3 @@
-source("/storage/kuijjerarea/ine/breast_met/single_cell/pre_processing_for_networks/run_scorpion_fn.R")
-
 required_libraries <- c(
     "data.table",    
     "dplyr",
@@ -14,6 +12,9 @@ required_libraries <- c(
 for (lib in required_libraries) {
   suppressPackageStartupMessages(library(lib, character.only = TRUE, quietly = TRUE))
 }
+
+source("/storage/kuijjerarea/ine/breast_met/single_cell/pre_processing_for_networks/run_scorpion_fn.R")
+
 
 main_dir <- "/storage/kuijjerarea/ine/breast_met/single_cell"
 setwd(main_dir)
