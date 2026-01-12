@@ -1,7 +1,9 @@
 library('GEOquery')
 
 getwd()
-setwd("/storage/kuijjerarea/ine/breast_met/single_cell/raw")
+
+
+setwd("raw")
 gse <- getGEO("GSE180286", GSEMatrix = TRUE, destdir = getwd())
 show(gse)
 
