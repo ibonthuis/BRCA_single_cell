@@ -10,11 +10,14 @@ for (lib in required_libraries) {
   suppressPackageStartupMessages(library(lib, character.only = TRUE, quietly = TRUE))
 }
 
-LN_METS <- get(load("/storage/kuijjerarea/ine/breast_met/single_cell/Data/LN_METS_merged.RData")) 
+LN_METS <- get(load("Data/LN_METS_merged.RData")) 
 
-LN_METS_only <- get(load("/storage/kuijjerarea/ine/breast_met/single_cell/Data/LN_METS_plus_PRIMARY_scaledata_removed.RData"))
-breastMETData <- get(load("/storage/kuijjerarea/ine/breast_met/single_cell/Data/GSE180286_SCTransform_integrated_BREAST_MET.RData"))
+LN_METS_only <- get(load("Data/LN_METS_plus_PRIMARY_scaledata_removed.RData"))
+breastMETData <- get(load("Data/GSE180286_SCTransform_integrated_BREAST_MET.RData"))
 
+# addition since August 6th
+LN_METS <- get(load("Data/LN_METS_merged_prepped_qc.RData"))
+unique(LN_METS$celltype)
 
 var_features_all <- c(VariableFeatures(breastMETData), VariableFeatures(LN_METS_only))
 var_features_all <- unique(var_features_all) #4628 features 
@@ -36,11 +39,11 @@ DimPlot(LN_METS, reduction = "harmony")
 
 markerList <- c('EPCAM', 'CDH1', 'COL1A1', 'COL3A1', 'MS4A1', 
                 'CDH5', 'PECAM1', 'S100B', 'CDH2', 'PTPRC', 
-                'CD3E', 'CD14', 'IL1RL1', 'MZB1', 'MKI67', 'PLD4')
+                'CD3E', 'CD14', 'IL1RL1', 'MZB1', 'MKI67', 'ADIPOQ')
 
 options(bitmapType='cairo')
 
-png('/storage/kuijjerarea/ine/breast_met/single_cell/Figures/atlasMarkers.png', width = 4000*.85, height = 3000*.85, res = 300)
+png('Figures/atlasMarkers_adipo.png', width = 4000*.85, height = 3000*.85, res = 300)
 plot_density(LN_METS, markerList) & 
   theme_light() & 
   theme(plot.title = element_text(face = 4), legend.key.width = unit(0.2, 'cm')) &
@@ -48,27 +51,27 @@ plot_density(LN_METS, markerList) &
 dev.off()
 
 
-pdf("/storage/kuijjerarea/ine/breast_met/single_cell/Figures/merged_LN_MET_featuresplot_extra.pdf", h = 12, w = 10)
-FeaturePlot(LN_METS, c('EPCAM', 'CDH1', 'COL1A1', 'COL3A1', 'MS4A1', 
+pdf("Figures/merged_LN_MET_featuresplot_extra.pdf", h = 12, w = 10)
+FeaturePlot(LN_METS, c('EPCAM', 'CDH1', 'COL1A1', 'COL3A1', 'MS4A1', 'MZB1', 'MKI67',
                 'CDH5', 'PECAM1', 'S100B', 'CDH2', 'PTPRC', 
-                'CD3E', 'CD14', 'IL1RL1', 'MZB1', 'MKI67', 'PLD4',
+                'CD3E', 'CD14', 'IL1RL1',  'PLD4',
                 'CD8A', 'NKG7', 'FCER1A', 'CST3', 'CCR7', 'NRP1', 'CLEC4C' )) # CLEC4C (also BCDA-2), CCR7 and NRP1 mark plasmacytoid dendritic cells
 dev.off()
 
 
-pdf("/storage/kuijjerarea/ine/breast_met/single_cell/Figures/merged_LN_MET_first_umap.pdf") 
+pdf("Figures/merged_LN_MET_first_umap.pdf") 
 DimPlot(LN_METS, reduction = "umap", group.by = "orig.ident")
 dev.off()
 
-pdf("/storage/kuijjerarea/ine/breast_met/single_cell/Figures/merged_LN_MET_umap_new_clusters.pdf") 
+pdf("Figures/merged_LN_MET_umap_new_clusters.pdf") 
 DimPlot(LN_METS, reduction = "umap", group.by = "new_clusters")
 dev.off()
 
-pdf("/storage/kuijjerarea/ine/breast_met/single_cell/Figures/merged_LN_MET_umap_seurat_clusters.pdf") 
+pdf("Figures/merged_LN_MET_umap_seurat_clusters.pdf") 
 DimPlot(LN_METS, label = TRUE)
 dev.off()
 
-pdf("/storage/kuijjerarea/ine/breast_met/single_cell/Figures/merged_LN_MET_umap_seurat_clusters_harmony.pdf") 
+pdf("Figures/merged_LN_MET_umap_seurat_clusters_harmony.pdf") 
 DimPlot(LN_METS, reduction = "harmony")
 dev.off()
 
@@ -76,7 +79,7 @@ dev.off()
 
 save(
     LN_METS,
-    file = "/storage/kuijjerarea/ine/breast_met/single_cell/Data/LN_METS_merged.RData"
+    file = "Data/LN_METS_merged.RData"
 )
 
 
@@ -100,6 +103,15 @@ levels(Idents(LN_METS)) <- newID
 LN_METS$celltype <- Idents(LN_METS)
 #UMAPPlot(LN_METS, label = TRUE)
 
-pdf("/storage/kuijjerarea/ine/breast_met/single_cell/Figures/merged_LN_MET_umap_celltype_new_annotation_labelled.pdf") 
+pdf("Figures/merged_LN_MET_umap_celltype_new_annotation_labelled.pdf") 
 DimPlot(LN_METS, reduction = "umap", group.by = "celltype", label = TRUE)
 dev.off()
+
+
+metadata$patient_name <- paste(metadata$patient_ID, metadata$GroupID, metadata$celltype, sep = "_")
+  print(unique(metadata$patient_name))
+numberofcells <- as.data.frame(table(metadata$patient_name))
+
+metadata <- LN_METS@meta.data
+head(metadata)
+
