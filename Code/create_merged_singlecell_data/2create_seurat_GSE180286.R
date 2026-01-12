@@ -3,9 +3,11 @@ library("stringr")
 #packageVersion("Seurat") # v 5.0.1
 
 
-source("/storage/kuijjerarea/ine/breast_met/single_cell/create_seurat_object_fn.R")
 
-matricesList <- list.files(path = '/storage/kuijjerarea/ine/breast_met/single_cell/raw/GSE180286_extracted', pattern = '.txt', full.names = TRUE)
+
+source("create_seurat_object_fn.R")
+
+matricesList <- list.files(path = 'raw/GSE180286_extracted', pattern = '.txt', full.names = TRUE)
 breastMETData1 <- readSample(matricesList[1])
 breastMET_list <- lapply(matricesList[-1], readSample)
 
@@ -30,10 +32,10 @@ DimPlot(breastMETData)
 
 save(
     breastMETData,
-    file = "/storage/kuijjerarea/ine/breast_met/single_cell/Data/GSE180286_BREAST_MET.RData"
+    file = "Data/GSE180286_BREAST_MET.RData"
 )
 
-# pdf("/storage/kuijjerarea/ine/breast_met/single_cell/Figures/first_umap_gse180286.pdf")
+# pdf("Figures/first_umap_gse180286.pdf")
 # UMAPPlot(breastMETData)
 # dev.off()
 
@@ -44,6 +46,6 @@ breastMETData <- scQC(breastMETData)
 
 save(
     breastMETData,
-    file = "/storage/kuijjerarea/ine/breast_met/single_cell/Data/GSE180286_SCTransform_integrated_BREAST_MET.RData"
+    file = "Data/GSE180286_SCTransform_integrated_BREAST_MET.RData"
 )
 
