@@ -4,7 +4,7 @@ library("BiocManager")
 library("glmGamPoi")
 #BiocManager::install("glmGamPoi")
 
-sc_breastmet <- readRDS("/storage/kuijjerarea/ine/breast_met/single_cell/raw/BRCA.rds")
+sc_breastmet <- readRDS("raw/BRCA.rds")
 
 
 
@@ -24,7 +24,7 @@ LN_METS_only <- SCTransform(LN_METS_only) %>%
 
 save(
     LN_METS_only,
-    file = "/storage/kuijjerarea/ine/breast_met/single_cell/Data/LN_METS_plus_PRIMARY.RData"
+    file = "Data/LN_METS_plus_PRIMARY.RData"
 )
 
 
@@ -33,7 +33,7 @@ LN_METS_only[["SCT"]]$scale.data <- NULL
 
 save(
   LN_METS_only, 
-  file = "/storage/kuijjerarea/ine/breast_met/single_cell/Data/LN_METS_plus_PRIMARY_scaledata_removed.RData"
+  file = "Data/LN_METS_plus_PRIMARY_scaledata_removed.RData"
 )
 
 
@@ -59,7 +59,7 @@ LN_METS_only$patient_sampleID <- paste0(LN_METS_only$orig.ident, '-', LN_METS_on
 
 save(
   LN_METS_only, 
-  file = "/storage/kuijjerarea/ine/breast_met/single_cell/Data/LN_METS_plus_PRIMARY_scaledata_removed.RData"
+  file = "Data/LN_METS_plus_PRIMARY_scaledata_removed.RData"
 )
 
 fwrite(ALL@meta.data, "metadata_ALL_annotated.tsv", sep = "\t", row.names = TRUE)
